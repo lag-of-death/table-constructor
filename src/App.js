@@ -18,14 +18,16 @@ const Column = styled.td`
   background: papayawhip;
 `;
 
-export default () => (
+const TableConstructor = () => (
   <Table>
     <tbody>
-      <Row>
-        <Column>
-          Hello World!
-        </Column>
-      </Row>
+    <Row>
+      <Column>
+        Hello World!
+      </Column>
+    </Row>
     </tbody>
   </Table>
 );
+
+export default TableConstructor;
