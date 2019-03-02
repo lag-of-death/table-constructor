@@ -1,10 +1,12 @@
+const path = require('path');
 const express = require('express');
 const favicon = require('express-favicon');
+
 const { IpFilter, IpDeniedError } = require('express-ipfilter');
 
-const path = require('path');
 const port = process.env.PORT || 8080;
-const allowedIPs = [];
+const allowedIPs = [process.env.IP_THAT_CAN_SEE_SOURCE_MAPS];
+
 const app = express();
 
 app.get(/\.map$/, IpFilter(allowedIPs, {mode: 'allow'}));
