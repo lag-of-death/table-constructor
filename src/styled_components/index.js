@@ -49,21 +49,40 @@ const Adjusters = styled.div`
   display: flex;
 `;
 
+const RowContainer = styled.div`
+  display: flex;
+`;
+
 const Row = styled.div`
-  border-left: 11px solid black;
   display: flex;
   text-align: center;
+  flex-grow: 1;
 `;
 
 const RowHeader = styled.div`
   background: lightblue;
-  border-left: 11px solid black;
   display: flex;
   text-align: center;
+  flex-grow: 1;
+`;
+
+const RowActionsContainer = styled.div`
+  display: flex; 
+  justify-content: space-around;
+  flex-direction: column;
+`;
+
+const ColumnActionsContainer = styled.div`
+  display: flex; 
+  margin-bottom: 4px; 
+  background: white; 
+  justify-content: space-between;
 `;
 
 const Column = styled.div`
   border: 1px solid black;
+  display: flex;
+  flex-direction: ${ (props) => props.flexDirection }
   padding: 4px;
   width: 100%;
   
@@ -75,7 +94,6 @@ const Column = styled.div`
     box-shadow: 2px 2px 1px gray inset;
     box-sizing: border-box; 
     font-size: 20px;   
-    height: 100%; 
     margin: 0; 
     padding: 4px; 
     width: 100%; 
@@ -172,5 +190,8 @@ export {
   ActionsPanel,
   Table,
   DownloadCSV,
-  Button
+  Button,
+  RowContainer,
+  ColumnActionsContainer,
+  RowActionsContainer
 }

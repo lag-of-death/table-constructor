@@ -14,16 +14,21 @@ import {
 import {
   withoutLastElement,
   getTableWithoutLastColumn,
-  getNumOfLastRowColumns,
+  getNumOfFirstRowColumns,
   guard,
   handleAddingRows,
   handleAddingColumns,
   handleSubtractingRows,
-  handleSubtractingColumns
+  handleSubtractingColumns,
+  clone,
+  splice,
+  handleAction
 } from './helpers';
 
-const MAX_ROWS_LENGTH = 5;
-const MAX_COLS_LENGTH = 5;
+import { actions, limits } from './helpers/constants'
+
+const { MAX_COLS_LENGTH, MAX_ROWS_LENGTH } = limits;
+const { BACK_ACTION, FRONT_ACTION, REMOVE_ACTION } = actions;
 
 class TableConstructor extends React.Component {
   constructor(props) {
@@ -40,25 +45,50 @@ class TableConstructor extends React.Component {
     }
   }
 
+  columnActions = {
+    [BACK_ACTION]: (columnsOnTheLeft, currentColumnVal) => columnsOnTheLeft.concat('', currentColumnVal),
+    [FRONT_ACTION]: (columnsOnTheLeft, currentColumnVal) => columnsOnTheLeft.concat(currentColumnVal, ''),
+    [REMOVE_ACTION]: (columnsOnTheLeft, currentColumnVal, row) => (row.length > 1) ? columnsOnTheLeft : columnsOnTheLeft.concat(currentColumnVal)
+  };
+
+  rowActions = {
+    [BACK_ACTION]: (table, rowIdx, tableClone) => {
+      return (rowIdx === 0)
+        ? [table[rowIdx].map(() => ''), ...tableClone]
+        : splice(table, rowIdx, 0, table[rowIdx].map(() => ''))
+    },
+    [FRONT_ACTION]: (table, rowIdx)=> splice(table,rowIdx + 1, 0, table[rowIdx].map(() => '')),
+    [REMOVE_ACTION]: (table, rowIdx, tableClone) => {
+      return (table.length > 1 )
+        ? splice(table, rowIdx, 1)
+        : tableClone
+    }
+  };
+
   incColumnNum = () => {
     this.setState(({ table }) => {
-      const numOfLastRowColumns = getNumOfLastRowColumns(table);
+      const numOfFirstRowColumns = getNumOfFirstRowColumns(table);
 
       return {
-        table: numOfLastRowColumns < MAX_COLS_LENGTH ? table.map(row => row.concat([''])) : table,
-        numOfColumns: numOfLastRowColumns < MAX_COLS_LENGTH ? numOfLastRowColumns + 1 : numOfLastRowColumns
+        table: numOfFirstRowColumns < MAX_COLS_LENGTH ? table.map(row => row.concat([''])) : table,
+        numOfColumns: numOfFirstRowColumns < MAX_COLS_LENGTH ? numOfFirstRowColumns + 1 : numOfFirstRowColumns
       }
     })
   };
 
   decColumnNum = () => {
     this.setState(({ table }) => {
-      const lastRowColumnLength = getNumOfLastRowColumns(table);
+      const firstRowColumnLength = getNumOfFirstRowColumns(table);
 
-      return {
-        table: lastRowColumnLength > 1 ? getTableWithoutLastColumn(table) : table,
-        numOfColumns: lastRowColumnLength - 1,
-      };
+      if (firstRowColumnLength > 1) {
+        return {
+          table: getTableWithoutLastColumn(table) ,
+          numOfColumns: firstRowColumnLength - 1,
+        };
+      } else {
+        return {}
+      }
+
     })
   };
 
@@ -73,7 +103,7 @@ class TableConstructor extends React.Component {
   incRowNum = () => {
     this.setState(({ table }) => {
       const { length: numOfRows } = table;
-      const columnsForNewRows = Array(getNumOfLastRowColumns(table)).fill('');
+      const columnsForNewRows = Array(getNumOfFirstRowColumns(table)).fill('');
 
       return (
         (numOfRows >= MAX_ROWS_LENGTH)
@@ -87,38 +117,103 @@ class TableConstructor extends React.Component {
     this.setState(({ table }) => {
       const { length : numOfRows } = table;
 
-      return {
-        table: numOfRows > 1 ? withoutLastElement(table) : table,
-        numOfRows: numOfRows - 1,
-      };
+      if (numOfRows > 1) {
+        return {
+          table: withoutLastElement(table),
+          numOfRows: numOfRows - 1,
+        };
+      } else {
+        return {
+
+        }
+      }
+
     })
   };
 
   handleColumnValueChange = (rowIdx, columnIdx, { target : { value : columnNewValue }}) => {
     this.setState(({ table }) => {
-      const immutableTableData = JSON.stringify(table);
-      const tableDataCopy = JSON.parse(immutableTableData);
+      const tableCopy = clone(table);
 
-      tableDataCopy[rowIdx][columnIdx] = columnNewValue;
+      tableCopy[rowIdx][columnIdx] = columnNewValue;
 
       return {
-        table: tableDataCopy
+        table: tableCopy
       };
     });
   };
-  
+
+  getAdjustedStateForRowAction = (table, action, rowIdx) => {
+    const tableClone = clone(table);
+    const rows = this.rowActions[action](table, rowIdx, tableClone);
+
+    return {
+      numOfRows: rows.length,
+      table: rows
+    }
+  };
+
+  handleRowAction = (rowIdx, action) => {
+    this.setState(({ table }) => {
+      return handleAction(
+        action,
+        table.length + 1,
+        MAX_ROWS_LENGTH,
+        this.getAdjustedStateForRowAction.bind(this, table, action, rowIdx)
+      );
+    })
+  };
+
+  getAdjustedStateForColumnAction = (table, columnIdx, action) => {
+    const rows = table.map(row =>
+      row.reduce(
+        (columnsOnTheLeft, currentColumnVal, i) =>
+          (i === columnIdx)
+            ? this.columnActions[action](columnsOnTheLeft, currentColumnVal, row)
+            : columnsOnTheLeft.concat(currentColumnVal)
+        , []
+      )
+    );
+
+    return {
+      numOfColumns: rows[0].length,
+      table: rows
+    };
+  };
+
+  handleColumnAction = (columnIdx, action) => {
+    this.setState(({ table }) => {
+      return handleAction(
+        action,
+        table[0].length + 1,
+        MAX_COLS_LENGTH,
+        this.getAdjustedStateForColumnAction.bind(this, table, columnIdx, action)
+      );
+    })
+  };
+
+  refreshAdjusters = () => {
+    this.setState(({table}) =>{
+      return {
+        numOfRows: table.length,
+        numOfColumns: table[0].length
+      }
+    })
+  };
+
   handleNumOfColumnsChange = ({ target : { value : numOfColumnsToSetFromUser }}) => {
+
     guard(numOfColumnsToSetFromUser, MAX_COLS_LENGTH, () => {
       this.setState(({ table }) => {
-        const numOfLastRowColumns = getNumOfLastRowColumns(table);
+        const numOfFirstRowColumns = getNumOfFirstRowColumns(table);
 
         const handler = (
-          (numOfColumnsToSetFromUser > numOfLastRowColumns)
+          (numOfColumnsToSetFromUser > numOfFirstRowColumns)
             ? handleAddingColumns
             : handleSubtractingColumns
         );
 
-        return handler(table, numOfLastRowColumns, numOfColumnsToSetFromUser);
+        return handler(table, numOfFirstRowColumns, numOfColumnsToSetFromUser);
       });
     });
   };
@@ -153,6 +248,7 @@ class TableConstructor extends React.Component {
               handleNumOfColumnsChange={this.handleNumOfColumnsChange}
               incColumnNum={this.incColumnNum}
               decColumnNum={this.decColumnNum}
+              refreshAdjusters={this.refreshAdjusters}
               label={numOfColumns > 1 ? 'COLUMNS' : 'COLUMN'}
             />
 
@@ -161,6 +257,7 @@ class TableConstructor extends React.Component {
               handleNumOfColumnsChange={this.handleNumOfRowsChange}
               incColumnNum={this.incRowNum}
               decColumnNum={this.decRowNum}
+              refreshAdjusters={this.refreshAdjusters}
               label={numOfRows > 1 ? 'ROWS' : 'ROW'}
             />
           </Adjusters>
@@ -177,7 +274,9 @@ class TableConstructor extends React.Component {
         </ActionsPanel>
 
         <Table>
-          <TableContent 
+          <TableContent
+            handleColumnAction={this.handleColumnAction}
+            handleRowAction={this.handleRowAction}
             rows={state.table}
             handleColumnValueChange={this.handleColumnValueChange}
           />

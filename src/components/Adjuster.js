@@ -9,12 +9,13 @@ import {
   Button
 } from '../styled_components';
 
-const Adjuster = ({ label, numOfColumns, handleNumOfColumnsChange, incColumnNum, decColumnNum }) => {
+const Adjuster = ({ label, numOfColumns, handleNumOfColumnsChange, incColumnNum, decColumnNum, refreshAdjusters }) => {
   return (
     <AdjStyle>
       <Counter>
         <InputStyle
           value={numOfColumns > 0 ? numOfColumns : ''}
+          onBlur={refreshAdjusters}
           onChange={handleNumOfColumnsChange}
         />
         <Label>

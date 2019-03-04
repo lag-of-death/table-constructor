@@ -1,3 +1,5 @@
+import { actions } from './constants';
+
 const withoutLastElement = (array) => {
   return array.slice(0, -1);
 };
@@ -6,30 +8,21 @@ const getTableWithoutLastColumn = (rows) => {
   return rows.map(withoutLastElement);
 };
 
-const getNumOfLastRowColumns = (table) => {
-  return getLastRow(table).length;
+const getNumOfFirstRowColumns = (table) => {
+  return table[0].length;
 };
 
 const isWrongValue = (value, maxLength) => {
   return isNaN(value) || (value > maxLength);
 };
 
-const guard = (numToSetFromUser, maxNumToSetTo, callback) => {
-  if (isWrongValue(numToSetFromUser, maxNumToSetTo)) {
-    alertUser(maxNumToSetTo);
-  } else {
-    callback();
-  }
-};
+const guard = (numToSetFromUser, maxNumToSetTo, callback) =>
+  (isWrongValue(numToSetFromUser, maxNumToSetTo))
+    ? alertUser(maxNumToSetTo)
+    : callback();
 
 const alertUser = (maxLength) => {
   alert(`WRONG VALUE - MUST BE NUMERIC OF MAX: ${maxLength} AND MIN OF 0.`);
-};
-
-const getLastRow = (table) => {
-  const { length : numOfRows } = table;
-
-  return table[numOfRows - 1];
 };
 
 const handleAddingRows = (table, numOfRows, numOfRowsToSetFromUser) => {
@@ -40,11 +33,11 @@ const handleAddingRows = (table, numOfRows, numOfRowsToSetFromUser) => {
 };
 
 const concatNewRows = (table, numOfRowsToSetFromUser, numOfRows) => {
-  const lastRow = getLastRow(table);
-  const lastRowColumnsValuesNullified = lastRow.map(() => '');
+  const firstRow = table[0];
+  const firstRowColumnsValuesNullified = firstRow.map(() => '');
   const numOfRowsToAdd = numOfRowsToSetFromUser - numOfRows;
 
-  return table.concat(Array(numOfRowsToAdd).fill(lastRowColumnsValuesNullified))
+  return table.concat(Array(numOfRowsToAdd).fill(firstRowColumnsValuesNullified))
 };
 
 const handleAddingColumns = (table, numOfColumns, numOfColumnsToSetFromUser) => {
@@ -91,13 +84,34 @@ const handleSubtractingColumns = (table, numOfColumns, numOfColumnsToSetFromUser
   }
 };
 
+const clone = (obj) => {
+  return JSON.parse(JSON.stringify(obj));
+};
+
+const splice = (table, ...xs) => {
+  const copy = clone(table);
+
+  copy.splice(...xs);
+
+  return copy;
+};
+
+const handleAction = (action, len, maxLen, callback) => {
+  return (action === actions.REMOVE_ACTION)
+    ? callback()
+    : guard(len, maxLen, callback);
+};
+
 export {
-  withoutLastElement,
+  clone,
+  getNumOfFirstRowColumns,
   getTableWithoutLastColumn,
-  getNumOfLastRowColumns,
   guard,
-  handleAddingRows,
   handleAddingColumns,
+  handleAddingRows,
+  handleSubtractingColumns,
   handleSubtractingRows,
-  handleSubtractingColumns
+  splice,
+  withoutLastElement,
+  handleAction
 }

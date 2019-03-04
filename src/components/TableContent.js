@@ -4,13 +4,22 @@ import {
   Column,
   RowHeader,
   Row,
+  ColumnActionsContainer,
+  RowContainer,
+  RowActionsContainer
 } from '../styled_components';
 
-const getRowContent = (rowIdx, row, rows, handleColumnValueChange ) =>
+import {actions} from "../helpers/constants";
+
+const { BACK_ACTION, FRONT_ACTION, REMOVE_ACTION } = actions;
+
+const getRowContent = (rowIdx, row, rows, handleColumnValueChange, getComponent = () => null) =>
   row.map((column, columnIdx) =>
     (
       <Column
+        flexDirection={rowIdx === 0 ? 'column' : 'row'}
         key={rowIdx + ':' + columnIdx}>
+        { getComponent(columnIdx) }
         <textarea
           rows='1'
           value={rows[rowIdx][columnIdx]}
@@ -20,22 +29,48 @@ const getRowContent = (rowIdx, row, rows, handleColumnValueChange ) =>
     )
   );
 
-const TableContent = ({rows, handleColumnValueChange}) =>
+const getColumnActions = (handleColumnAction, columnIdx) => {
+  return (
+    <ColumnActionsContainer>
+      { getActions(handleColumnAction, columnIdx) }
+    </ColumnActionsContainer>
+  )
+};
+
+const getActions = (actionHandler, idx) => {
+  return [[BACK_ACTION, '+'], [REMOVE_ACTION, '-'], [FRONT_ACTION, '+']].map((action) =>
+    <button
+      key={`${action}:${idx}`}
+      onClick={() => actionHandler(idx, action[0])}>
+      {action[1]}
+    </button>
+  );
+};
+
+const TableContent = ({rows, handleColumnValueChange, handleColumnAction, handleRowAction}) =>
   (
     rows.map((row, rowIdx) =>
-      (rowIdx === 0)
-        ? (
-          <RowHeader
-            key={rowIdx}>
-            { getRowContent(rowIdx, row, rows, handleColumnValueChange) }
-          </RowHeader>
-        )
-        : (
-          <Row
-            key={rowIdx}>
-            { getRowContent(rowIdx, row, rows, handleColumnValueChange) }
-          </Row>
-        )
+      <RowContainer key={rowIdx}
+      >
+        <RowActionsContainer>
+          { getActions(handleRowAction, rowIdx) }
+        </RowActionsContainer>
+        {
+          (rowIdx === 0)
+            ? (
+              <RowHeader
+                key={rowIdx}>
+                { getRowContent(rowIdx, row, rows, handleColumnValueChange, getColumnActions.bind(null, handleColumnAction) ) }
+              </RowHeader>
+            )
+            : (
+              <Row
+                key={rowIdx}>
+                { getRowContent(rowIdx, row, rows, handleColumnValueChange) }
+              </Row>
+            )
+        }
+      </RowContainer>
     )
   );
 
