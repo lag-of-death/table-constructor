@@ -59,7 +59,7 @@ const Action = styled.button`
   display: flex;
   justify-content: center;
   line-height: 10px;
-  width: 10px;
+  min-width: 10px;
   
   &:hover {
     cursor: pointer;
