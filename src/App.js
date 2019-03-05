@@ -92,10 +92,16 @@ class TableConstructor extends React.Component {
 
   downloadCSV = () => {
     this.setState(({ table }) => {
-      const csvContent = `data:text/csv;charset=utf-8,${table.map(row => row.join(',')).join('\n')}`;
+      const csvContent = table.map(row => row.join(',')).join('\r\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+      if (navigator.msSaveBlob) {
+        navigator.msSaveBlob(blob, 'fileName.csv');
+      }
 
       return {
-        csvLink: encodeURI(csvContent),
+        csvLink: URL.createObjectURL(blob),
       };
     });
   };

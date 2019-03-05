@@ -20,6 +20,8 @@
   "globals": {
     "window": true,
     "it": true,
+    "navigator": true,
+    "Blob": true,
     "isNaN": true,
     "document": true,
     "alert": true
