@@ -1,10 +1,10 @@
 import styled, { css } from 'styled-components';
-import { minRes, midRes, minColumnWidth, blueBackground, grayBackground } from './variables';
+import { minRes, midRes, minColumnWidth, blueBackground, grayBackground, blackColor, whiteColor} from './variables';
 
 const sharedStyle = css`
   background: ${blueBackground};
-  border: 2px solid black;
-  box-shadow: 1px 1px 1px white inset, 1px 1px 1px black;
+  border: 2px solid ${blackColor};
+  box-shadow: 1px 1px 1px ${whiteColor} inset, 1px 1px 1px ${blackColor};
 `;
 
 const Button = styled.button`
@@ -17,7 +17,7 @@ const DownloadCSV = styled.a`
   ${sharedStyle}
   
   align-items: center;
-  color: black;
+  color: ${blackColor};
   display: flex;
   font-weight: bold; 
   margin-top: 8px;
@@ -31,7 +31,7 @@ const DownloadCSV = styled.a`
 `;
 
 const Table = styled.div`
-  border: 2px solid black;
+  border: 2px solid ${blackColor};
   margin-top: 40px;
   text-align: center;
 `;
@@ -53,7 +53,7 @@ const Adjusters = styled.div`
 const Action = styled.button`
   align-items: center;
   background: ${grayBackground};
-  border: 2px solid black;
+  border: 2px solid ${blackColor};
   display: flex;
   justify-content: center;
   line-height: 10px;
@@ -87,7 +87,7 @@ const RowActionsContainer = styled.div`
   flex-direction: column;
   align-items: center;
   background: ${blueBackground};
-  border-right: 1px solid black;
+  border-right: 1px solid ${blackColor};
   width: 20px;
   padding: 2px;
 `;
@@ -95,13 +95,13 @@ const RowActionsContainer = styled.div`
 const ColumnActionsContainer = styled.div`
   display: flex; 
   margin-bottom: 4px; 
-  background: white; 
+  background: ${whiteColor}; 
   justify-content: space-between;
   padding: 2px;
 `;
 
 const Column = styled.div`
-  border: 1px solid black;
+  border: 1px solid ${blackColor};
   display: flex;
   flex-direction: ${ (props) => props.isHeader ? 'column' : 'row' }
   padding: 4px;
@@ -111,8 +111,8 @@ const Column = styled.div`
   textarea {
     background: transparent;
     border: none;
-    border-bottom: 1px dotted black;
-    border-right: 1px dotted black;
+    border-bottom: 1px dotted ${blackColor};
+    border-right: 1px dotted ${blackColor};
     box-shadow: 2px 2px 1px gray inset;
     box-sizing: border-box; 
     font-size: 20px;   
@@ -123,8 +123,8 @@ const Column = styled.div`
 `;
 
 const AdjStyle = styled.div`
-  border: 1px solid black; 
-  box-shadow: 2px 2px 2px black, 2px 2px 2px black inset;
+  border: 1px solid ${blackColor}; 
+  box-shadow: 2px 2px 2px ${blackColor}, 2px 2px 2px ${blackColor} inset;
   display: flex;
   justify-content: space-between;
   margin-right: 0;
@@ -139,8 +139,8 @@ const AdjStyle = styled.div`
 
 const InputStyle = styled.input`
   border: none; 
-  border-bottom: 1px dotted black;
-  border-right: 1px dotted black;
+  border-bottom: 1px dotted ${blackColor};
+  border-right: 1px dotted ${blackColor};
   box-shadow: 2px 2px 1px gray inset;
   box-sizing: border-box; 
   font-size: 20px;
