@@ -19,6 +19,7 @@ To run:
 ### yarn build && node server.js
 
 `PORT` variable can be change to specify the port occupied by the application.
+By default, the application is run on port 8080.
 
 ### Source maps
 
