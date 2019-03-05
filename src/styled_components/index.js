@@ -70,6 +70,10 @@ const RowActionsContainer = styled.div`
   display: flex; 
   justify-content: space-around;
   flex-direction: column;
+  align-items: center;
+  background: lightblue;
+  border-right: 1px solid black;
+  width: 20px;
 `;
 
 const ColumnActionsContainer = styled.div`
@@ -82,7 +86,7 @@ const ColumnActionsContainer = styled.div`
 const Column = styled.div`
   border: 1px solid black;
   display: flex;
-  flex-direction: ${ (props) => props.flexDirection }
+  flex-direction: ${ (props) => props.isHeader ? 'column' : 'row' }
   padding: 4px;
   width: 100%;
   

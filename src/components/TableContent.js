@@ -14,20 +14,24 @@ import {actions} from "../helpers/constants";
 const { BACK_ACTION, FRONT_ACTION, REMOVE_ACTION } = actions;
 
 const getRowContent = (rowIdx, row, rows, handleColumnValueChange, getComponent = () => null) =>
-  row.map((column, columnIdx) =>
-    (
-      <Column
-        flexDirection={rowIdx === 0 ? 'column' : 'row'}
-        key={rowIdx + ':' + columnIdx}>
-        { getComponent(columnIdx) }
-        <textarea
-          rows='1'
-          value={rows[rowIdx][columnIdx]}
-          onChange={(evt) => handleColumnValueChange(rowIdx, columnIdx, evt)}
-        />
-      </Column>
-    )
-  );
+  {
+    const isHeader = rowIdx === 0;
+
+    return row.map((column, columnIdx) =>
+      (
+        <Column
+          isHeader
+          key={rowIdx + ':' + columnIdx}>
+          { getComponent(columnIdx) }
+          <textarea
+            rows={isHeader ? 1 : 2}
+            value={rows[rowIdx][columnIdx]}
+            onChange={(evt) => handleColumnValueChange(rowIdx, columnIdx, evt)}
+          />
+        </Column>
+      )
+    );
+  };
 
 const getColumnActions = (handleColumnAction, columnIdx) => {
   return (

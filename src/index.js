@@ -7,17 +7,21 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 const GlobalStyle = createGlobalStyle`
-  body {
-    margin: 0;
-    padding: 30px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  button {
+    align-items: center;
+    background: lightgray;
+    border: 2px solid black;
+    display: flex;
+    justify-content: center;
+    line-height: 10px;
+    width: 10px;
   }
 
-  code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
-  }  
+  body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 30px;
+  }
 `;
 
 ReactDOM.render(
