@@ -8,9 +8,14 @@ import * as serviceWorker from './serviceWorker';
 
 const GlobalStyle = createGlobalStyle`
   body {
+    display: flex;
     font-family: sans-serif;
     margin: 0;
-    padding: 30px;
+    
+    #root {
+      flex-grow: 1;
+      padding: 30px;
+    }
   }
 `;
 

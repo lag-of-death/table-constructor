@@ -5,8 +5,8 @@ const actions = {
 };
 
 const limits = {
-  MAX_ROWS_LENGTH: 5,
-  MAX_COLS_LENGTH: 5
+  MAX_ROWS_LENGTH: 150,
+  MAX_COLS_LENGTH: 50
 };
 
 export {

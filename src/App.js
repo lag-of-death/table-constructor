@@ -281,11 +281,6 @@ class TableConstructor extends React.Component {
             handleColumnValueChange={this.handleColumnValueChange}
           />
         </Table>
-
-        <div style={{position: 'absolute', 'bottom': 100}}>
-          {JSON.stringify(state.table)}
-        </div>
-
       </React.Fragment>
     )
   }

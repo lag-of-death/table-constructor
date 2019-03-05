@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components';
-import { minRes, midRes } from './variables';
+import { minRes, midRes, minColumnWidth, blueBackground, grayBackground } from './variables';
 
 const sharedStyle = css`
-  background: lightblue;
+  background: ${blueBackground};
   border: 2px solid black;
   box-shadow: 1px 1px 1px white inset, 1px 1px 1px black;
 `;
@@ -52,7 +52,7 @@ const Adjusters = styled.div`
 
 const Action = styled.button`
   align-items: center;
-  background: lightgray;
+  background: ${grayBackground};
   border: 2px solid black;
   display: flex;
   justify-content: center;
@@ -75,7 +75,7 @@ const Row = styled.div`
 `;
 
 const RowHeader = styled.div`
-  background: lightblue;
+  background: ${blueBackground};
   display: flex;
   text-align: center;
   flex-grow: 1;
@@ -86,7 +86,7 @@ const RowActionsContainer = styled.div`
   justify-content: space-around;
   flex-direction: column;
   align-items: center;
-  background: lightblue;
+  background: ${blueBackground};
   border-right: 1px solid black;
   width: 20px;
   padding: 2px;
@@ -106,6 +106,7 @@ const Column = styled.div`
   flex-direction: ${ (props) => props.isHeader ? 'column' : 'row' }
   padding: 4px;
   width: 100%;
+  min-width: ${minColumnWidth};
   
   textarea {
     background: transparent;
