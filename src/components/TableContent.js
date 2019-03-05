@@ -1,4 +1,5 @@
 import React  from 'react';
+import PropTypes from 'prop-types';
 
 import {
   Column,
@@ -78,5 +79,12 @@ const TableContent = ({rows, handleColumnValueChange, handleColumnAction, handle
       </RowContainer>
     )
   );
+
+TableContent.propTypes = {
+  rows: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
+  handleColumnValueChange: PropTypes.func.isRequired,
+  handleColumnAction: PropTypes.func.isRequired,
+  handleRowAction: PropTypes.func.isRequired
+};
 
 export default TableContent;

@@ -1,4 +1,5 @@
 import React  from 'react';
+import PropTypes from 'prop-types';
 
 import {
   Label,
@@ -28,6 +29,15 @@ const Adjuster = ({ label, numOfColumns, handleNumOfColumnsChange, incColumnNum,
       </IncDecButtons>
     </AdjStyle>
   )
+};
+
+Adjuster.propTypes = {
+  label: PropTypes.string.isRequired,
+  numOfColumns: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]).isRequired,
+  handleNumOfColumnsChange: PropTypes.func.isRequired,
+  incColumnNum: PropTypes.func.isRequired,
+  decColumnNum: PropTypes.func.isRequired,
+  refreshAdjusters: PropTypes.func.isRequired,
 };
 
 export default Adjuster;
