@@ -98,7 +98,7 @@ const splice = (table, ...xs) => {
 
 const handleAction = (action, len, maxLen, callback) => {
   return (action === actions.REMOVE_ACTION)
-    ? callback()
+    ? window.confirm('Are you sure to remove this?') ? callback() : () => null
     : guard(len, maxLen, callback);
 };
 
