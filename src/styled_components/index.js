@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import { minRes, midRes } from './variables';
 
 const sharedStyle = css`
   background: lightblue;
@@ -24,7 +25,7 @@ const DownloadCSV = styled.a`
   text-align: center;
   text-decoration: none;
   
-  @media(min-width: 600px) {
+  @media(min-width: ${midRes}) {
       margin-top: 0px;
   }
 `;
@@ -40,7 +41,7 @@ const ActionsPanel = styled.div`
   flex-direction: column;
   justify-content: space-between;
   
-  @media(min-width: 600px) {
+  @media(min-width: ${midRes}) {
     flex-direction: row;
   }
 `;
@@ -115,7 +116,7 @@ const AdjStyle = styled.div`
   padding: 6px 4px 4px 2px; 
   width: 50%;
   
-  @media(min-width: 600px) {
+  @media(min-width: ${midRes}) {
     margin-right: 10px;
     width: fit-content;
   }
@@ -132,12 +133,12 @@ const InputStyle = styled.input`
   text-align: center; 
   width: 20px;
   
-  @media(min-width: 400px) {
+  @media(min-width: ${minRes}) {
     font-size: 30px;
     width: 40px;
   }
   
-  @media(min-width: 600px) {
+  @media(min-width: ${midRes}) {
     width: 70px; 
   }
 `;
@@ -148,11 +149,11 @@ const IncDecButtons = styled.div`
   justify-content: space-between;
   width: 20px;
   
-  @media(min-width: 400px) {
+  @media(min-width: ${minRes}) {
     width: 40px;
   }
   
-  @media(min-width: 600px) {
+  @media(min-width: ${midRes}) {
     width: initial;
   }
 `;
@@ -164,7 +165,7 @@ const Counter = styled.div`
   font-size: 12px;
   justify-content: center;
   
-  @media(min-width: 600px) {
+  @media(min-width: ${midRes}) {
     flex-direction: column;
   }
 `;
@@ -178,7 +179,7 @@ const Label = styled.div`
   width: 100%;
   word-break: break-all;
         
-  @media(min-width: 400px) {
+  @media(min-width: ${minRes}) {
     margin-left: 2px;
   }
 `;
