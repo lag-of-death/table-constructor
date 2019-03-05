@@ -7,20 +7,6 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 const GlobalStyle = createGlobalStyle`
-  button {
-    align-items: center;
-    background: lightgray;
-    border: 2px solid black;
-    display: flex;
-    justify-content: center;
-    line-height: 10px;
-    width: 10px;
-  }
-  
-  button:hover {
-    cursor: pointer;
-  }
-
   body {
     font-family: sans-serif;
     margin: 0;

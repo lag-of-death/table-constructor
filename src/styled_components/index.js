@@ -50,6 +50,20 @@ const Adjusters = styled.div`
   display: flex;
 `;
 
+const Action = styled.button`
+  align-items: center;
+  background: lightgray;
+  border: 2px solid black;
+  display: flex;
+  justify-content: center;
+  line-height: 10px;
+  width: 10px;
+  
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
 const RowContainer = styled.div`
   display: flex;
 `;
@@ -181,6 +195,11 @@ const Label = styled.div`
         
   @media(min-width: ${minRes}) {
     margin-left: 2px;
+    font-size: 20px;
+  }
+  
+ @media(min-width: ${midRes}) {
+    font-size: 14px;
   }
 `;
 
@@ -200,5 +219,6 @@ export {
   Button,
   RowContainer,
   ColumnActionsContainer,
-  RowActionsContainer
+  RowActionsContainer,
+  Action
 }

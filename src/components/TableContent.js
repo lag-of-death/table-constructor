@@ -6,6 +6,7 @@ import {
   Row,
   ColumnActionsContainer,
   RowContainer,
+  Action,
   RowActionsContainer
 } from '../styled_components';
 
@@ -43,11 +44,11 @@ const getColumnActions = (handleColumnAction, columnIdx) => {
 
 const getActions = (actionHandler, idx) => {
   return [[BACK_ACTION, '+'], [REMOVE_ACTION, '-'], [FRONT_ACTION, '+']].map((action) =>
-    <button
+    <Action
       key={`${action}:${idx}`}
       onClick={() => actionHandler(idx, action[0])}>
       {action[1]}
-    </button>
+    </Action>
   );
 };
 
