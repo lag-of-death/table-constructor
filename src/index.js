@@ -16,6 +16,10 @@ const GlobalStyle = createGlobalStyle`
     line-height: 10px;
     width: 10px;
   }
+  
+  button:hover {
+    cursor: pointer;
+  }
 
   body {
     font-family: sans-serif;
