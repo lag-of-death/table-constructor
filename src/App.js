@@ -90,11 +90,13 @@ class TableConstructor extends React.Component {
     });
   };
 
-  downloadCSV = ({ state }) => {
-    const csvContent = `data:text/csv;charset=utf-8,${state.table.map(row => row.join(',')).join('\n')}`;
+  downloadCSV = () => {
+    this.setState(({ table }) => {
+      const csvContent = `data:text/csv;charset=utf-8,${table.map(row => row.join(',')).join('\n')}`;
 
-    this.setState({
-      csvLink: encodeURI(csvContent),
+      return {
+        csvLink: encodeURI(csvContent),
+      };
     });
   };
 
