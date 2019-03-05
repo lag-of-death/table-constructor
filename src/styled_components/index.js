@@ -74,6 +74,7 @@ const RowActionsContainer = styled.div`
   background: lightblue;
   border-right: 1px solid black;
   width: 20px;
+  padding: 2px;
 `;
 
 const ColumnActionsContainer = styled.div`
@@ -81,6 +82,7 @@ const ColumnActionsContainer = styled.div`
   margin-bottom: 4px; 
   background: white; 
   justify-content: space-between;
+  padding: 2px;
 `;
 
 const Column = styled.div`
