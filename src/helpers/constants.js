@@ -6,9 +6,9 @@ const actions = {
 
 const limits = {
   MAX_ROWS_LENGTH: 150,
-  MAX_COLS_LENGTH: 50
+  MAX_COLS_LENGTH: 50,
 };
 
 export {
-  actions, limits
-}
+  actions, limits,
+};

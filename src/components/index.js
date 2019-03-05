@@ -1,7 +1,7 @@
-import Adjuster from './Adjuster'
-import TableContent from './TableContent'
+import Adjuster from './Adjuster';
+import TableContent from './TableContent';
 
 export {
   Adjuster,
-  TableContent
-}
+  TableContent,
+};

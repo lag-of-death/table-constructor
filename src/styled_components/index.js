@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components';
-import { minRes, midRes, minColumnWidth, blueBackground, grayBackground, blackColor, whiteColor} from './variables';
+import {
+  minRes, midRes, minColumnWidth, blueBackground, grayBackground, blackColor, whiteColor,
+} from './variables';
 
 const sharedStyle = css`
   background: ${blueBackground};
@@ -103,7 +105,7 @@ const ColumnActionsContainer = styled.div`
 const Column = styled.div`
   border: 1px solid ${blackColor};
   display: flex;
-  flex-direction: ${ (props) => props.isHeader ? 'column' : 'row' }
+  flex-direction: ${props => (props.isHeader ? 'column' : 'row')}
   padding: 4px;
   width: 100%;
   min-width: ${minColumnWidth};
@@ -221,5 +223,5 @@ export {
   RowContainer,
   ColumnActionsContainer,
   RowActionsContainer,
-  Action
-}
+  Action,
+};

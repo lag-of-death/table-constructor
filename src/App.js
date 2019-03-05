@@ -1,4 +1,4 @@
-import React  from 'react';
+import React from 'react';
 import {
   Adjusters,
   ActionsPanel,
@@ -8,7 +8,7 @@ import {
 
 import {
   Adjuster,
-  TableContent
+  TableContent,
 } from './components';
 
 import {
@@ -22,48 +22,46 @@ import {
   handleSubtractingColumns,
   clone,
   splice,
-  handleAction
+  handleAction,
 } from './helpers';
 
-import { actions, limits } from './helpers/constants'
+import { actions, limits } from './helpers/constants';
 
 const { MAX_COLS_LENGTH, MAX_ROWS_LENGTH } = limits;
 const { BACK_ACTION, FRONT_ACTION, REMOVE_ACTION } = actions;
 
 class TableConstructor extends React.Component {
+  columnActions = {
+    [BACK_ACTION]: (columnsOnTheLeft, currentColumnVal) => columnsOnTheLeft.concat('', currentColumnVal),
+    [FRONT_ACTION]: (columnsOnTheLeft, currentColumnVal) => columnsOnTheLeft.concat(currentColumnVal, ''),
+    [REMOVE_ACTION]: (columnsOnTheLeft, currentColumnVal, row) => (
+      (row.length > 1) ? columnsOnTheLeft : columnsOnTheLeft.concat(currentColumnVal)
+    ),
+  };
+
+  rowActions = {
+    [BACK_ACTION]: (table, rowIdx, tableClone) => ((rowIdx === 0)
+      ? [table[rowIdx].map(() => ''), ...tableClone]
+      : splice(table, rowIdx, 0, table[rowIdx].map(() => ''))),
+    [FRONT_ACTION]: (table, rowIdx) => splice(table, rowIdx + 1, 0, table[rowIdx].map(() => '')),
+    [REMOVE_ACTION]: (table, rowIdx, tableClone) => ((table.length > 1)
+      ? splice(table, rowIdx, 1)
+      : tableClone),
+  };
+
   constructor(props) {
     super(props);
 
     this.state = {
       table: [
         ['Name', 'Surname'],
-        ['John', 'Doe']
+        ['John', 'Doe'],
       ],
-      csvLink : '',
+      csvLink: '',
       numOfRows: 2,
       numOfColumns: 2,
-    }
+    };
   }
-
-  columnActions = {
-    [BACK_ACTION]: (columnsOnTheLeft, currentColumnVal) => columnsOnTheLeft.concat('', currentColumnVal),
-    [FRONT_ACTION]: (columnsOnTheLeft, currentColumnVal) => columnsOnTheLeft.concat(currentColumnVal, ''),
-    [REMOVE_ACTION]: (columnsOnTheLeft, currentColumnVal, row) => (row.length > 1) ? columnsOnTheLeft : columnsOnTheLeft.concat(currentColumnVal)
-  };
-
-  rowActions = {
-    [BACK_ACTION]: (table, rowIdx, tableClone) => {
-      return (rowIdx === 0)
-        ? [table[rowIdx].map(() => ''), ...tableClone]
-        : splice(table, rowIdx, 0, table[rowIdx].map(() => ''))
-    },
-    [FRONT_ACTION]: (table, rowIdx)=> splice(table,rowIdx + 1, 0, table[rowIdx].map(() => '')),
-    [REMOVE_ACTION]: (table, rowIdx, tableClone) => {
-      return (table.length > 1 )
-        ? splice(table, rowIdx, 1)
-        : tableClone
-    }
-  };
 
   incColumnNum = () => {
     this.setState(({ table }) => {
@@ -71,9 +69,11 @@ class TableConstructor extends React.Component {
 
       return {
         table: numOfFirstRowColumns < MAX_COLS_LENGTH ? table.map(row => row.concat([''])) : table,
-        numOfColumns: numOfFirstRowColumns < MAX_COLS_LENGTH ? numOfFirstRowColumns + 1 : numOfFirstRowColumns
-      }
-    })
+        numOfColumns: numOfFirstRowColumns < MAX_COLS_LENGTH
+          ? numOfFirstRowColumns + 1
+          : numOfFirstRowColumns,
+      };
+    });
   };
 
   decColumnNum = () => {
@@ -82,22 +82,20 @@ class TableConstructor extends React.Component {
 
       if (firstRowColumnLength > 1) {
         return {
-          table: getTableWithoutLastColumn(table) ,
+          table: getTableWithoutLastColumn(table),
           numOfColumns: firstRowColumnLength - 1,
         };
-      } else {
-        return {}
       }
-
-    })
+      return {};
+    });
   };
 
-  downloadCSV = () => {
-    const csvContent = `data:text/csv;charset=utf-8,${this.state.table.map(row => row.join(',')).join('\n')}`;
+  downloadCSV = ({ state }) => {
+    const csvContent = `data:text/csv;charset=utf-8,${state.table.map(row => row.join(',')).join('\n')}`;
 
     this.setState({
-      csvLink: encodeURI(csvContent)
-    })
+      csvLink: encodeURI(csvContent),
+    });
   };
 
   incRowNum = () => {
@@ -109,36 +107,34 @@ class TableConstructor extends React.Component {
         (numOfRows >= MAX_ROWS_LENGTH)
           ? { numOfRows }
           : { table: table.concat([columnsForNewRows]), numOfRows: numOfRows + 1 }
-      )
-    })
+      );
+    });
   };
 
   decRowNum = () => {
     this.setState(({ table }) => {
-      const { length : numOfRows } = table;
+      const { length: numOfRows } = table;
 
       if (numOfRows > 1) {
         return {
           table: withoutLastElement(table),
           numOfRows: numOfRows - 1,
         };
-      } else {
-        return {
-
-        }
       }
+      return {
 
-    })
+      };
+    });
   };
 
-  handleColumnValueChange = (rowIdx, columnIdx, { target : { value : columnNewValue }}) => {
+  handleColumnValueChange = (rowIdx, columnIdx, { target: { value: columnNewValue } }) => {
     this.setState(({ table }) => {
       const tableCopy = clone(table);
 
       tableCopy[rowIdx][columnIdx] = columnNewValue;
 
       return {
-        table: tableCopy
+        table: tableCopy,
       };
     });
   };
@@ -149,60 +145,50 @@ class TableConstructor extends React.Component {
 
     return {
       numOfRows: rows.length,
-      table: rows
-    }
+      table: rows,
+    };
   };
 
   handleRowAction = (rowIdx, action) => {
-    this.setState(({ table }) => {
-      return handleAction(
-        action,
-        table.length + 1,
-        MAX_ROWS_LENGTH,
-        this.getAdjustedStateForRowAction.bind(this, table, action, rowIdx)
-      );
-    })
+    this.setState(({ table }) => handleAction(
+      action,
+      table.length + 1,
+      MAX_ROWS_LENGTH,
+      this.getAdjustedStateForRowAction.bind(this, table, action, rowIdx),
+    ));
   };
 
   getAdjustedStateForColumnAction = (table, columnIdx, action) => {
-    const rows = table.map(row =>
-      row.reduce(
-        (columnsOnTheLeft, currentColumnVal, i) =>
-          (i === columnIdx)
-            ? this.columnActions[action](columnsOnTheLeft, currentColumnVal, row)
-            : columnsOnTheLeft.concat(currentColumnVal)
-        , []
-      )
-    );
+    const rows = table.map(row => row.reduce(
+      (columnsOnTheLeft, currentColumnVal, i) => ((i === columnIdx)
+        ? this.columnActions[action](columnsOnTheLeft, currentColumnVal, row)
+        : columnsOnTheLeft.concat(currentColumnVal)),
+      [],
+    ));
 
     return {
       numOfColumns: rows[0].length,
-      table: rows
+      table: rows,
     };
   };
 
   handleColumnAction = (columnIdx, action) => {
-    this.setState(({ table }) => {
-      return handleAction(
-        action,
-        table[0].length + 1,
-        MAX_COLS_LENGTH,
-        this.getAdjustedStateForColumnAction.bind(this, table, columnIdx, action)
-      );
-    })
+    this.setState(({ table }) => handleAction(
+      action,
+      table[0].length + 1,
+      MAX_COLS_LENGTH,
+      this.getAdjustedStateForColumnAction.bind(this, table, columnIdx, action),
+    ));
   };
 
   refreshAdjusters = () => {
-    this.setState(({table}) =>{
-      return {
-        numOfRows: table.length,
-        numOfColumns: table[0].length
-      }
-    })
+    this.setState(({ table }) => ({
+      numOfRows: table.length,
+      numOfColumns: table[0].length,
+    }));
   };
 
-  handleNumOfColumnsChange = ({ target : { value : numOfColumnsToSetFromUser }}) => {
-
+  handleNumOfColumnsChange = ({ target: { value: numOfColumnsToSetFromUser } }) => {
     guard(numOfColumnsToSetFromUser, MAX_COLS_LENGTH, () => {
       this.setState(({ table }) => {
         const numOfFirstRowColumns = getNumOfFirstRowColumns(table);
@@ -217,11 +203,11 @@ class TableConstructor extends React.Component {
       });
     });
   };
-  
-  handleNumOfRowsChange = ({ target : { value : numOfRowsToSetFromUser }}) => {
+
+  handleNumOfRowsChange = ({ target: { value: numOfRowsToSetFromUser } }) => {
     guard(numOfRowsToSetFromUser, MAX_ROWS_LENGTH, () => {
       this.setState(({ table }) => {
-        const { length : numOfRows } = table;
+        const { length: numOfRows } = table;
         const handler = (
           (numOfRowsToSetFromUser > numOfRows)
             ? handleAddingRows
@@ -236,8 +222,8 @@ class TableConstructor extends React.Component {
   render() {
     const { state } = this;
 
-    const numOfRows = state.numOfRows;
-    const numOfColumns = state.numOfColumns;
+    const { numOfRows } = state;
+    const { numOfColumns } = state;
 
     return (
       <React.Fragment>
@@ -265,8 +251,9 @@ class TableConstructor extends React.Component {
           <div>
             <DownloadCSV
               onClick={this.downloadCSV}
-              download='data.csv'
-              href={state.csvLink}>
+              download="data.csv"
+              href={state.csvLink}
+            >
               DOWNLOAD CSV
             </DownloadCSV>
           </div>
@@ -282,7 +269,7 @@ class TableConstructor extends React.Component {
           />
         </Table>
       </React.Fragment>
-    )
+    );
   }
 }
 
